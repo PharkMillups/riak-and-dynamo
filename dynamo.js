@@ -1,4 +1,6 @@
-// This is a modified version of Amazon's Dyanamo Paper, annotated with information about Riak and how its design compares to Dynamo. 
+// <strong>Hear Ye! Hear Ye! This is not done. It's a work in progress.</strong>
+//
+// This is a modified version of Amazon's Dynamo Paper, annotated with information about Riak and how its design compares to Dynamo. 
 // Basho Technologies built  Riak based on many (but not all) of the ideas and design decisions set forth in this paper. We 
 // often get questions about how closely we adhered to the principles and design decisions
 // put forth in the paper. I thought it would be worthwhile to annotate it with 
@@ -17,6 +19,7 @@
 // <a href="https://twitter.com/pharkmillups">Mark</a>
 
 //<hr>
+
 Dynamo: Amazon’s Highly Available Key-value Store
 
 //
@@ -25,7 +28,6 @@ Dynamo: Amazon’s Highly Available Key-value Store
 // In addition to Riak, Cassandra and Voldemort come to mind. Some of you may also remember 
 // Dynomite (which predates all of these). I'm sure there are more. 
 // 
-// Members of the Basho team 
 
 Giuseppe DeCandia, Deniz Hastorun, Madan Jampani, Gunavardhan Kakulapati, 
 Avinash Lakshman, Alex Pilchin, Swaminathan Sivasubramanian, Peter Vosshall and Werner Vogels
