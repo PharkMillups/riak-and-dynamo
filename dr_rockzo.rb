@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby -w
 # this file does cocaine
 
 comment_block, document = false, []
