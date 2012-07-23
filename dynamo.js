@@ -20,7 +20,7 @@
 
 //<hr>
 
-Dynamo: Amazon’s Highly Available Key-value Store
+<h1>Dynamo: Amazon’s Highly Available Key-value Store</h1>
 
 //
 // This paper was first release in ... and was popularized on the blog of Werner Vogels. Since then there 
@@ -29,12 +29,12 @@ Dynamo: Amazon’s Highly Available Key-value Store
 // Dynomite (which predates all of these). I'm sure there are more. 
 // 
 
-Giuseppe DeCandia, Deniz Hastorun, Madan Jampani, Gunavardhan Kakulapati, 
+<div style="text-align:center">Giuseppe DeCandia, Deniz Hastorun, Madan Jampani, Gunavardhan Kakulapati, 
 Avinash Lakshman, Alex Pilchin, Swaminathan Sivasubramanian, Peter Vosshall and Werner Vogels
 
-Amazon.com
+Amazon.com</div>
 
-Abstract
+<h1>Abstract</h1>
 
 Reliability at massive scale is one of the biggest challenges we face at Amazon.com, one of the 
 largest e-commerce operations in the world; even the slightest outage has significant financial 
@@ -51,13 +51,14 @@ It makes extensive use of object versioning and application-assisted conflict re
 that provides a novel interface for developers to use.
 
 Categories and Subject Descriptors
-D.4.2 [Operating Systems]: Storage Management; D.4.5 [Operating Systems]: Reliability; D.4.2 
-[Operating Systems]: Performance;
+D.4.2 [Operating Systems]: Storage Management;
+D.4.5 [Operating Systems]: Reliability;
+D.4.2 [Operating Systems]: Performance;
 
 General Terms
 Algorithms, Management, Measurement, Performance, Design, Reliability.
 
-1. Introduction
+<h1>1. Introduction</h1>
 
 Amazon runs a world-wide e-commerce platform that serves tens of millions customers at peak times using 
 tens of thousands of servers located in many data centers around the world. There are strict operational 
@@ -143,7 +144,7 @@ provided through aggregate measures instead of absolute details.
 // <strong>Brief Background on Riak:</strong>
 // <hr>
 
-2. Background
+<h1>2. Background</h1>
 
 // Basho Technologies started to develop Riak back in 2007 to solve an internal problem. We were, 
 // at the time, builing a web application that would require a database layer that afforded higher 
@@ -186,7 +187,7 @@ interface, is highly available with a clearly defined consistency window, is eff
 resource usage, and has a simple scale out scheme to address growth in data set size or request 
 rates. Each service that uses Dynamo runs its own Dynamo instances.
 //
-2.1 System Assumptions and Requirements
+<h2>2.1 System Assumptions and Requirements</h2>
 
 The storage system for this class of services has the following requirements:
 
@@ -254,7 +255,7 @@ scalability related extensions in later sections.
 
 // <strong>Riak Loves SLAs</strong>
 
-2.2 Service Level Agreements (SLA)
+<h2>2.2 Service Level Agreements (SLA)</h2>
 
 //
 // Much like Amazon built Dynamo to guarantee their applications were always available to retail shoppers,
@@ -286,7 +287,10 @@ different data stores to manage its state and these data stores are only accessi
 boundaries. Some services act as aggregators by using several other services to produce a composite 
 response. Typically, the aggregator services are stateless, although they use extensive caching.
 
-Figure 1: Service-oriented architecture of Amazon’s platform.
+<figure>
+<img src="/images/figure1.png">
+<figcaption>Figure 1: Service-oriented architecture of Amazon’s platform.</figcaption>
+</figure>
 
 A common approach in the industry for forming a performance oriented SLA is to describe it using average,
 median and expected variance. At Amazon we have found that these metrics are not good enough if the goal
@@ -315,7 +319,7 @@ and to let services make their own tradeoffs between functionality, performance 
 
 // <strong>Riak's Design Considerations</strong>
 
-2.3 Design Considerations
+<h2>2.3 Design Considerations</h2>
 
 // Availability under any circumstances was something we stressed when 
 // designing Riak, too. Most database didn't enable developers to do this in a simple way
@@ -412,9 +416,9 @@ hosts at once.
 // <br/>
 // ** Add some references to other wor
 
-3. Related Work
+<h1>3. Related Work</h1>
 
-3.1 Peer to Peer Systems
+<h2>3.1 Peer to Peer Systems</h2>
 
 There are several peer-to-peer (P2P) systems that have looked at the problem of data storage and distribution. 
 The first generation of P2P systems, such as Freenet and Gnutella, were predominantly used as file sharing 
@@ -439,7 +443,7 @@ infrastructure. By comparison, PAST provides a simple abstraction layer on top o
 and immutable objects. It assumes that the application can build the necessary storage semantics (such as 
 mutable files) on top of it.
 
-3.2 Distributed File Systems and Databases
+<h2>3.2 Distributed File Systems and Databases</h2>
 
 Distributing data for performance, availability and durability has been widely studied in 
 the file system and database systems community. Compared to P2P storage systems that only 
@@ -478,7 +482,7 @@ convenient programming model, these systems are limited in scalability and avail
 systems are not capable of handling network partitions because they typically provide strong 
 consistency guarantees.
 
-3.3 Discussion
+<h2>3.3 Discussion</h2>
 
 Dynamo differs from the aforementioned decentralized storage systems in terms of its target requirements. 
 First, Dynamo is targeted mainly at applications that need an “always writeable” data store where no 
@@ -496,7 +500,7 @@ routing information locally to route a request to the appropriate node directly.
 
 // <strong>System Architecture</strong>
 
-4.System Architecture
+<h1>4.System Architecture</h1>
 
 // This is truly the meat of the Dynamo paper. Stick around. It gets good. Trust me.
 
@@ -509,10 +513,41 @@ so this paper focuses on the core distributed systems techniques used in Dynamo:
 versioning, membership, failure handling and scaling. Table 1 presents a summary of the list of techniques 
 Dynamo uses and their respective advantages.
 
-Table 1: Summary of techniques used in Dynamo and their advantages.
+<table class='table'>
+<caption>Table 1: Summary of techniques used in Dynamo and their advantages.</caption>
+<tr>
+<th>Problem</th>
+<th>Technique</th>
+<th>Advantage</th>
+</tr>
+<tr>
+<td>Partitioning</td>
+<td>Consistent Hashing</td>
+<td>Incremental Scalability</td>
+</tr>
+<tr>
+<td>High Availability for writes</td>
+<td>Vector clocks with reconciliation during reads</td>
+<td>Version size is decoupled from update rates.</td>
+</tr>
+<tr>
+<td>Handling temporary failures</td>
+<td>Sloppy Quorum and hinted handoff</td>
+<td>Provides high availability and durability guarantee when some of the replicas are not available.</td>
+</tr>
+<tr>
+<td>Recovering from permanent failures</td>
+<td>Anti-entropy using Merkle trees</td>
+<td>Synchronizes divergent replicas in the background.</td>
+</tr>
+<tr>
+<td>Membership and failure detection</td>
+<td>Gossip-based membership protocol and failure detection.</td>
+<td>Preserves symmetry and avoids having a centralized registry for storing membership and node liveness information.</td>
+</tr>
+</table>
 
-
-4.1 System Interface
+<h2>4.1 System Interface</h2>
 
 //
 // Whereas Dynamo only has the concept of keys, we added a higher level of organization called a "bucket."
@@ -546,7 +581,7 @@ responsible for serving the key.
 
 // <strong>Partitioning in Riak</strong>
 
-4.2 Partitioning Algorithm
+<h2>4.2 Partitioning Algorithm</h2>
 
 // As mentioned above, Riak uses consistent hashing to distribute data around ring to partitions responsible
 // for storing data. The ring has a maximum key space of 2^160. Each bucket+key (and its associated value)
@@ -604,7 +639,7 @@ heterogeneity in the physical infrastructure.
 
 // <strong>Replication</strong>
 
-4.3 Replication
+<h2>4.3 Replication</h2>
 
 // Replication in Riak, like in Dynamo, is fundamental and automatic. Remember above I introduced the 
 // concept of a bucket? In Riak, the replication parameter, "N" (also called "n&#95;val"),
@@ -621,8 +656,11 @@ responsible for the region of the ring between it and its Nth predecessor. In Fi
 the key k at nodes C and D in addition to storing it locally. Node D will store the keys that fall in the 
 ranges (A, B], (B, C], and (C, D].
 
+<figure>
+<img src="/images/figure2.png">
+<figcaption>Figure 2: Partitioning and replication of keys in Dynamo ring.</figcaption>
+</figure>
 
-Figure 2: Partitioning and replication of keys in Dynamo ring.
 
 // This diagram is applicable to Riak and the manner in which it replicates data.
 // The preference list is present in Riak, too, and is the reason why any node in the ring
@@ -639,7 +677,7 @@ positions in the ring to ensure that the list contains only distinct physical no
 
 // Data Versioning
 
-4.4 Data Versioning
+<h2>4.4 Data Versioning</h2>
 
 // Riak is an "eventually consistent" database. All replication is done asynchronously,
 // as you can expect, could result in a datum being returned to the client that is out of
@@ -717,7 +755,10 @@ that cannot be syntactically reconciled, it will return all the objects at the l
 corresponding version information in the context. An update using this context is considered to have 
 reconciled the divergent versions and the branches are collapsed into a single new version.
 
-Figure 3: Version evolution of an object over time.
+<figure>
+<img src="/images/figure3.png">
+<figcaption>Figure 3: Version evolution of an object over time.</figcaption>
+</figure>
 
 To illustrate the use of vector clocks, let us consider the example shown in Figure 3. A client writes a 
 new object. The node (say Sx) that handles the write for this key increases its sequence number and uses 
@@ -759,7 +800,7 @@ has not surfaced in production and therefore this issue has not been thoroughly 
 
 // <strong>Execution of get () and put () operations</strong>
 
-4.5 Execution of get () and put () operations
+<h2>4.5 Execution of get () and put () operations</h2>
 
 // Any node in the Riak ring can coordinate a request. The Riak information in this section 
 // applies to a failure-free environment. 
@@ -818,7 +859,7 @@ then reconciled and the reconciled version superseding the current versions is w
 
 // Annotate this  
 
-4.6 Handling Failures: Hinted Handoff
+<h2>4.6 Handling Failures: Hinted Handoff</h2>
 
 If Dynamo used a traditional quorum approach it would be unavailable during server failures and network 
 partitions, and would have reduced durability even under the simplest of failure conditions. To remedy 
@@ -852,7 +893,7 @@ center failures without a data outage.
 
 // All of this
 
-4.7 Handling permanent failures: Replica synchronization
+<h2>4.7 Handling permanent failures: Replica synchronization</h2>
 
 Hinted handoff works best if the system membership churn is low and node failures are transient. 
 There are scenarios under which hinted replicas become unavailable before they can be returned to 
@@ -883,9 +924,9 @@ This issue is addressed, however, by the refined partitioning scheme described i
 
 // All of 4.8
 
-4.8 Membership and Failure Detection
+<h2>4.8 Membership and Failure Detection</h2>
 
-4.8.1 Ring Membership
+<h3>4.8.1 Ring Membership</h3>
 
 In Amazon’s environment node outages (due to failures and maintenance tasks) are often transient but may 
 last for extended intervals. A node outage rarely signifies a permanent departure and therefore should 
@@ -908,7 +949,7 @@ partitioning and placement information also propagates via the gossip-based prot
 node is aware of the token ranges handled by its peers. This allows each node to forward a key’s read/write 
 operations to the right set of nodes directly.
 
-4.8.2 External Discovery
+<h3>4.8.2 External Discovery</h3>
 
 The mechanism described above could temporarily result in a logically partitioned Dynamo ring. For 
 example, the administrator could contact node A to join A to the ring, then contact node B to join 
@@ -919,7 +960,7 @@ nodes. Because all nodes eventually reconcile their membership with a seed, logi
 highly unlikely. Seeds can be obtained either from static configuration or from a configuration 
 service. Typically seeds are fully functional nodes in the Dynamo ring.
 
-4.8.3 Failure Detection
+<h3>4.8.3 Failure Detection</h3>
 
 Failure detection in Dynamo is used to avoid attempts to communicate with unreachable peers during 
 get() and put() operations and when transferring partitions and hinted replicas. For the purpose of 
@@ -943,7 +984,7 @@ detected by the individual nodes when they fail to communicate with others (whil
 
 // Annoate all of 4.9 
 
-4.9 Adding/Removing Storage Nodes
+<h2>4.9 Adding/Removing Storage Nodes</h2>
 
 When a new node (say X) is added into the system, it gets assigned a number of tokens that are randomly 
 scattered on the ring. For every key range that is assigned to node X, there may be a number of nodes 
@@ -961,7 +1002,7 @@ across the storage nodes, which is important to meet the latency requirements an
 bootstrapping. Finally, by adding a confirmation round between the source and the destination, it 
 is made sure that the destination node does not receive any duplicate transfers for a given key range.
 
-5.Implementation
+<h1>5.Implementation</h1>
 
 In Dynamo, each storage node has three main software components: request coordination, membership and 
 failure detection, and a local persistence engine. All these components are implemented in Java.
@@ -1011,7 +1052,7 @@ request. This optimization enables us to pick the node that has the data that wa
 read operation thereby increasing the chances of getting “read-your-writes” consistency. It also reduces 
 variability in the performance of the request handling which improves the performance at the 99.9 percentile.
 
-6. Experiences & Lessons Learned
+<h1>6. Experiences & Lessons Learned</h1>
 
 Dynamo is used by several services with different configurations. These instances differ by their 
 version reconciliation logic, and read/write quorum characteristics. The following are the main 
@@ -1068,7 +1109,7 @@ response R (or W) nodes need to respond to the coordinator. Clearly, the network
 datacenters affect the response time and the nodes (and their datacenter locations) are chosen such 
 that the applications target SLAs are met.
 
-6.1 Balancing Performance and Durability
+<h2>6.1 Balancing Performance and Durability</h2>
 
 While Dynamo’s principle design goal is to build a highly available data store, performance is an 
 equally important criterion in Amazon’s platform. As noted earlier, to provide a consistent customer 
@@ -1089,10 +1130,13 @@ Also, the 99.9th percentile latencies are around 200 ms and are an order of magn
 the averages. This is because the 99.9th percentile latencies are affected by several factors such 
 as variability in request load, object sizes, and locality patterns.
 
-Figure 4: Average and 99.9 percentiles of latencies for read and write requests during our peak 
+<figure>
+<img src="/images/figure4.png">
+<figcaption>Figure 4: Average and 99.9 percentiles of latencies for read and write requests during our peak 
 request season of December 2006. The intervals between consecutive ticks in the x-axis correspond 
 to 12 hours. Latencies follow a diurnal pattern similar to the request rate and 99.9 percentile 
-latencies are an order of magnitude higher than averages.
+latencies are an order of magnitude higher than averages.</figcaption>
+</figure>
 
 While this level of performance is acceptable for a number of services, a few customer-facing 
 services required higher levels of performance. For these services, Dynamo provides the ability 
@@ -1110,11 +1154,13 @@ coordinator choose one out of the N replicas to perform a “durable write”. S
 only for W responses, the performance of the write operation is not affected by the performance of the 
 durable write operation performed by a single replica.
 
+<figure>
+<img src="/images/figure5.png">
+<figcaption>Figure 5: Comparison of performance of 99.9th percentile latencies for buffered vs. non-buffered writes 
+over a period of 24 hours. The intervals between consecutive ticks in the x-axis correspond to one hour.</figcaption>
+</figure>
 
-Figure 5: Comparison of performance of 99.9th percentile latencies for buffered vs. non-buffered writes 
-over a period of 24 hours. The intervals between consecutive ticks in the x-axis correspond to one hour.
-
-6.2 Ensuring Uniform Load distribution
+<h2>6.2 Ensuring Uniform Load distribution</h2>
 
 //  This following paragraph
 
@@ -1139,10 +1185,12 @@ loads, a large number of popular keys are accessed and due to uniform distributi
 evenly distributed. However, during low loads (where load is 1/8th of the measured peak load), fewer 
 popular keys are accessed, resulting in a higher load imbalance.
 
-
-Figure 6: Fraction of nodes that are out-of-balance (i.e., nodes whose request load is above a 
+<figure>
+<img src="/images/figure6.png">
+<figcaption>Figure 6: Fraction of nodes that are out-of-balance (i.e., nodes whose request load is above a 
 certain threshold from the average system load) and their corresponding request load. The interval 
-between ticks in x-axis corresponds to a time period of 30 minutes.
+between ticks in x-axis corresponds to a time period of 30 minutes.</figcaption>
+</figure>
 
 This section discusses how Dynamo’s partitioning scheme has evolved over time 
 and its implications on load distribution.
@@ -1189,10 +1237,13 @@ while walking the ring from the end of the partition that contains key k1. The p
 this strategy are: (i) decoupling of partitioning and partition placement, and (ii) enabling the 
 possibility of changing the placement scheme at runtime.
 
-Figure 7: Partitioning and placement of keys in the three strategies. A, B, and C depict the three 
+<figure>
+<img src="/images/figure7.png">
+<figcaption>Figure 7: Partitioning and placement of keys in the three strategies. A, B, and C depict the three 
 unique nodes that form the preference list for the key k1 on the consistent hashing ring (N=3). The 
 shaded area indicates the key range for which nodes A, B, and C form the preference list. Dark arrows 
-indicate the token locations for various nodes.
+indicate the token locations for various nodes.</figcaption>
+</figure>
 
 // Next two paragraphs
 
@@ -1238,12 +1289,14 @@ requires retrieving the keys from individual nodes separately and is usually ine
 slow. The disadvantage of strategy 3 is that changing the node membership requires coordination 
 in order to preserve the properties required of the assignment.
 
-
-Figure 8: Comparison of the load distribution efficiency of different strategies for system with 30 
+<figure>
+<img src="/images/figure8.png">
+<figcaption>Figure 8: Comparison of the load distribution efficiency of different strategies for system with 30 
 nodes and N=3 with equal amount of metadata maintained at each node. The values of the system size 
-and number of replicas are based on the typical configuration deployed for majority of our services.
+and number of replicas are based on the typical configuration deployed for majority of our services.</figcaption>
+</figure>
 
-6.3 Divergent Versions: When and How Many?
+<h2>6.3 Divergent Versions: When and How Many?</h2>
 
 // Next two paragraphs
 
@@ -1274,7 +1327,7 @@ rarely by humans. This issue is not discussed in detail due to the sensitive nat
 
 // Next paragraph 
 
-6.4 Client-driven or Server-driven Coordination
+<h2>6.4 Client-driven or Server-driven Coordination</h2>
 
 As mentioned in Section 5, Dynamo has a request coordination component that uses a state 
 machine to handle incoming requests. Client requests are uniformly assigned to nodes in the 
@@ -1318,10 +1371,32 @@ at the 99.9th percentile. This is because Dynamo’s storage engine caches and w
 hit ratios. Moreover, since the load balancers and network introduce additional variability to the 
 response time, the gain in response time is higher for the 99.9th percentile than the average.
 
-Table 2: Performance of client-driven and server-driven coordination approaches.
+<table class='table'>
+<caption>Table 2: Performance of client-driven and server-driven coordination approaches.</caption>
+<tr>
+<th></th>
+<th>99.9th percentile read latency (ms)</th>
+<th>99.9th percentile write latency (ms)</th>
+<th>Average read latency (ms)</th>
+<th>Average write latency (ms)</th>
+</tr>
+<tr>
+<th>Server-driven</th>
+<td>68.9</td>
+<td>68.5</td>
+<td>3.9</td>
+<td>4.02</td>
+</tr>
+<tr>
+<th>Client-driven</th>
+<td>30.4</td>
+<td>30.4</td>
+<td>1.55</td>
+<td>1.9</td>
+</tr>
+</table>
 
-
-6.5 Balancing background vs. foreground tasks
+<h2>6.5 Balancing background vs. foreground tasks</h2>
 
 // Riak does this, too. Explain explain. 
 
@@ -1347,7 +1422,7 @@ Subsequently, it decides on how many time slices will be available to background
 the feedback loop to limit the intrusiveness of the background activities. Note that a similar problem 
 of managing background tasks has been studied in [4].
 
-6.6 Discussion
+<h2>6.6 Discussion</h2>
 
 This section summarizes some of the experiences gained during the process of implementation and 
 maintenance of Dynamo. Many Amazon internal services have used Dynamo for the past two years and 
@@ -1371,7 +1446,7 @@ overhead in maintaining the routing table increases with the system size. This l
 overcome by introducing hierarchical extensions to Dynamo. Also, note that this problem is actively 
 addressed by O(1) DHT systems(e.g., [14]).
 
-7. Conclusions
+<h1>7. Conclusions</h1>
 
 This paper described Dynamo, a highly available and scalable data store, used for storing state 
 of a number of core services of Amazon.com’s e-commerce platform. Dynamo has provided the desired 

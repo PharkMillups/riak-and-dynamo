@@ -21,6 +21,28 @@ h1, h2, h3, h4, h5, h6 {
   h1 {
     margin-top: 40px;
   }
+figure {
+  text-align:center;
+}
+img {
+  max-width:100%;
+}
+figcaption, caption {
+  font-weight:bold;
+  font-style:italic;
+}
+table.table td,
+table.table th {
+  border:1px solid black;
+  padding:0.25em;
+}
+table.table tr:nth-child(2n) {
+  background-color:#FDFDFF;
+}
+table.table th {
+  background-color:#D5D5DF;
+}
+
 #container {
   position: relative;
 }
