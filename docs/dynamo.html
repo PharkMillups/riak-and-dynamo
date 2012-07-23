@@ -201,7 +201,7 @@ or MapReduce under the hood)
 </ol>
 
 Riak's realistic object size limit is around 5MB. Basho does offer a commercial extenstion to Riak called
-<a href="#">Riak CS</a> that can store objects well into the GB range.</p></td><td class="code"><p>
+<a href="#">Riak CS</a> that can store objects well into the 10s of GB range at the time of this writing.</p></td><td class="code"><p>
 </p><p>
 Query Model: simple read and write operations to a data item that is uniquely identified by a key.
 State is stored as binary objects (i.e., blobs) identified by unique keys. No operations span multiple
@@ -209,11 +209,15 @@ data items and there is no need for relational schema. This requirement is based
 a significant portion of Amazon’s services can work with this simple query model and do not need any
 relational schema. Dynamo targets applications that need to store objects that are relatively small
 (usually less than 1 MB).
-</p><p></p></td><tr id="section-12"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-12">&#182;</a></div><p><strong>ACID?</strong>
+</p><p></p></td><tr id="section-12"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-12">&#182;</a></div><p><strong>ACID Properties:</strong>
 
 Riak offers no traditional "ACID" semantics around transactions. Instead, it's built to
 be "evenutually consistent." We did this because we were of the opinion (and our users proved this)
 that most applications don't require heavy transactions. (Even ATMs are eventually consistent.)
+<br/>
+<br/>
+Riak stresses availability and puts the power in the hands of developers and ops professionals to
+tweak and tune the consistency requirements.
 </p></td><td class="code"><p>
 ACID Properties: ACID (Atomicity, Consistency, Isolation, Durability) is a
 set of properties that guarantee that database transactions are processed reliably. In the context of

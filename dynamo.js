@@ -203,7 +203,7 @@ The storage system for this class of services has the following requirements:
 // </ol>
 //
 // Riak's realistic object size limit is around 5MB. Basho does offer a commercial extenstion to Riak called 
-// <a href="#">Riak CS</a> that can store objects well into the GB range. 
+// <a href="#">Riak CS</a> that can store objects well into the 10s of GB range at the time of this writing. 
 
 
 Query Model: simple read and write operations to a data item that is uniquely identified by a key. 
@@ -213,11 +213,15 @@ a significant portion of Amazon’s services can work with this simple query mod
 relational schema. Dynamo targets applications that need to store objects that are relatively small 
 (usually less than 1 MB).
 
-// <strong>ACID?</strong>
+// <strong>ACID Properties:</strong>
 //
 // Riak offers no traditional "ACID" semantics around transactions. Instead, it's built to 
 // be "evenutually consistent." We did this because we were of the opinion (and our users proved this)
 // that most applications don't require heavy transactions. (Even ATMs are eventually consistent.)
+// <br/>
+// <br/>
+// Riak stresses availability and puts the power in the hands of developers and ops professionals to 
+// tweak and tune the consistency requirements. 
 // 
 
 ACID Properties: ACID (Atomicity, Consistency, Isolation, Durability) is a 
@@ -228,11 +232,11 @@ acknowledged by both the industry and academia [5]. Dynamo targets applications 
 consistency (the “C” in ACID) if this results in high availability. Dynamo does not provide any isolation 
 guarantees and permits only single key updates. 
 
-// <strong>Efficiency</strong>
+// <strong>Efficiency:</strong>
 //
-// Agreed. Riak is made to (and will!) scale linearly on commodity hardware (often called "pizza boxes").
+// Agreed. Riak is made to scale linearly on commodity hardware (often called "pizza boxes").
 //
-// <li><a href="http://wiki.basho.com/display/RIAK/Hosting+and+Server+Configuration#HostingandServerConfiguration-Hardware">More on Hardware</a></li>
+// NOTE ** Add some details and examples of what Riak users deploy for hardware. ** 
 //
 
 Efficiency: The system needs to function on a commodity  hardware infrastructure. In Amazon’s platform, services have stringent latency requirements which are 
@@ -374,7 +378,7 @@ Incremental scalability: Dynamo should be able to scale out one storage host (he
 to as “node”) at a time, with minimal impact on both operators of the system and the system itself.
 
 // Again, we agree. Each storage nope is the same at its neighbor. Any node can coordinate 
-// a request and, in the event that a node goes does, its neighbors can cover for it until 
+// a request and, in the event that a node goes down, its neighbors can cover for it until 
 // it's restarted or decommissioned. 
 
 Symmetry: Every node in Dynamo should have the same set of responsibilities as its peers; 
@@ -396,8 +400,17 @@ runs on. e.g. the work distribution must be proportional to the capabilities of 
 servers. This is essential in adding new nodes with higher capacity without having to upgrade all 
 hosts at once.
 
-// Blurb about how this section is a wonderful study in some technology and how it should be read when
-// you have a moment. 
+//
+// Though some would lead you to believe otherwise, Dynamo- and Riak-shaped systems have existed
+// for some time (either as code or as research) and they should be investigated and reviewed 
+// (especially if you're planning to write your own distributed storage system). 
+// <br/>
+// <br/>
+// Basho doesn't claim to have pioneered many of the concepts that power Riak (like consistent hashing, 
+// vector clocks, and hinted handoff), but we do plan to perfect them. 
+// <br/>
+// <br/>
+// ** Add some references to other wor
 
 3. Related Work
 
